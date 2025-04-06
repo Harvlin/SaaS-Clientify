@@ -1,17 +1,18 @@
 package com.project.SaasCRM.service;
 
-import java.util.Map;
+import com.project.SaasCRM.domain.dto.AuthDTO;
+import com.project.SaasCRM.domain.dto.UserDTO;
 
 public interface AuthService {
-    String authenticate(String username, String password);
+    AuthDTO authenticate(String username, String password);
 
-    Map<String, Object> getUserInfo(String token);
+    UserDTO getUserInfo(String token);
 
     boolean validateToken(String token);
 
     void logout(String token);
 
-    String refreshToken(String refreshToken);
+    AuthDTO refreshToken(String refreshToken);
 
     void changePassword(Long userId, String currentPassword, String newPassword);
 

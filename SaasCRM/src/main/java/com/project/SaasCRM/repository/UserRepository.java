@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,9 +24,21 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByRoles_Name(String roleName);
 
+    Optional<User> findByResetTokenAndResetTokenExpiryAfter(String resetToken, LocalDateTime now);
+
     @Query("SELECT u FROM User u WHERE " +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
             "LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<User> search(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE u.username LIKE %:searchTerm% OR u.email LIKE %:searchTerm% OR u.fullName LIKE %:searchTerm%")
+    Page<User> findByUsernameContainingOrEmailContainingOrFullNameContaining(
+            @Param("searchTerm") String searchTerm1,
+            @Param("searchTerm") String searchTerm2,
+            @Param("searchTerm") String searchTerm3,
+            Pageable pageable);
+
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName")
+    List<User> findByRolesName(@Param("roleName") String roleName);
 }

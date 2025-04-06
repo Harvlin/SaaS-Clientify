@@ -1,52 +1,59 @@
 package com.project.SaasCRM.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+@Entity
 @Table(name = "email_templates")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class EmailTemplate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    private String subject;
+    @NotBlank
+    @Column(name = "subject_template", nullable = false)
+    private String subjectTemplate;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
+    @NotBlank
+    @Column(name = "content_template", columnDefinition = "TEXT", nullable = false)
+    private String contentTemplate;
 
-    @Column(name = "template_type")
-    private String templateType;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "created_at")
+    @Column(name = "is_active", nullable = false)
+    private boolean active = true;
+
+    @Column(name = "variables", columnDefinition = "TEXT")
+    private String variables;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_user_id")
-    private User createdBy;
+    @Column(name = "last_used_at")
+    private LocalDateTime lastUsedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
+    @Column(name = "usage_count")
+    private Long usageCount = 0L;
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+    @Version
+    private Long version;
 }

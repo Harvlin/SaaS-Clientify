@@ -1,7 +1,7 @@
 package com.project.SaasCRM.service;
 
 import com.project.SaasCRM.domain.InteractionType;
-import com.project.SaasCRM.domain.entity.Interaction;
+import com.project.SaasCRM.domain.dto.InteractionDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,29 +11,29 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface InteractionService {
-    Interaction saveInteraction(Interaction interaction);
+    InteractionDTO saveInteraction(InteractionDTO interaction);
 
-    Interaction updateInteraction(Interaction interaction);
+    InteractionDTO updateInteraction(InteractionDTO interaction);
 
     void deleteInteraction(Long interactionId);
 
-    Optional<Interaction> findById(Long interactionId);
+    Optional<InteractionDTO> findById(Long interactionId);
 
-    List<Interaction> findAllInteractions();
+    List<InteractionDTO> findAllInteractions();
 
-    Page<Interaction> findAllInteractionsPaginated(Pageable pageable);
+    Page<InteractionDTO> findAllInteractionsPaginated(Pageable pageable);
 
-    List<Interaction> findInteractionsByCustomer(Long customerId);
+    List<InteractionDTO> findInteractionsByCustomer(Long customerId);
 
-    Page<Interaction> findInteractionsByCustomerPaginated(Long customerId, Pageable pageable);
+    Page<InteractionDTO> findInteractionsByCustomerPaginated(Long customerId, Pageable pageable);
 
-    List<Interaction> findInteractionsByUser(Long userId);
+    List<InteractionDTO> findInteractionsByUser(Long userId);
 
-    List<Interaction> findInteractionsByType(InteractionType type);
+    List<InteractionDTO> findInteractionsByType(InteractionType type);
 
-    List<Interaction> findRecentInteractions(int limit);
+    List<InteractionDTO> findRecentInteractions(int limit);
 
-    List<Interaction> findInteractionsByDateRange(LocalDateTime startDate, LocalDateTime endDate);
+    List<InteractionDTO> findInteractionsByDateRange(LocalDateTime startDate, LocalDateTime endDate);
 
     Map<InteractionType, Long> getInteractionTypeCounts(Long customerId);
 

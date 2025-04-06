@@ -1,20 +1,28 @@
 package com.project.SaasCRM.service;
 
-import com.project.SaasCRM.domain.entity.Role;
+import com.project.SaasCRM.domain.dto.RoleDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface RoleService {
-    Role saveRole(Role role);
+    RoleDTO saveRole(RoleDTO role);
 
-    Role updateRole(Role role);
+    RoleDTO updateRole(RoleDTO role);
 
     void deleteRole(Long roleId);
 
-    Optional<Role> findById(Long roleId);
+    Optional<RoleDTO> findById(Long roleId);
 
-    Optional<Role> findByName(String name);
+    Optional<RoleDTO> findByName(String name);
 
-    List<Role> findAllRoles();
+    List<RoleDTO> findAllRoles();
+
+    Page<RoleDTO> findAllRolesPaginated(Pageable pageable);
+
+    List<RoleDTO> findRolesByUser(Long userId);
+
+    boolean existsByName(String name);
 }

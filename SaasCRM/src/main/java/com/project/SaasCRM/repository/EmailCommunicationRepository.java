@@ -34,4 +34,24 @@ public interface EmailCommunicationRepository extends JpaRepository<EmailCommuni
     Long countEmailsSentInPeriod(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT e FROM EmailCommunication e WHERE e.customer.id = :customerId")
+    List<EmailCommunication> findByCustomerId(@Param("customerId") Long customerId);
+    
+    @Query("SELECT e FROM EmailCommunication e WHERE e.sentBy.id = :userId")
+    List<EmailCommunication> findBySentById(@Param("userId") Long userId);
+    
+    @Query("SELECT e FROM EmailCommunication e WHERE e.emailTemplate.id = :templateId")
+    List<EmailCommunication> findByEmailTemplateId(@Param("templateId") Long templateId);
+    
+    List<EmailCommunication> findByStatus(SendStatus status);
+    
+    List<EmailCommunication> findByOpenedTrue();
+    
+    @Query("SELECT e FROM EmailCommunication e WHERE e.sendStatus = :status AND e.scheduledFor <= :currentTime")
+    List<EmailCommunication> findByStatusAndScheduledTimeLessThanEqual(
+            @Param("status") SendStatus status,
+            @Param("currentTime") LocalDateTime currentTime);
+    
+    List<EmailCommunication> findBySentAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 }

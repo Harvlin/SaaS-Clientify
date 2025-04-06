@@ -1,10 +1,15 @@
 package com.project.SaasCRM.domain.entity;
 
-import com.project.SaasCRM.domain.PriorityLevel;
+import com.project.SaasCRM.domain.TaskPriority;
 import com.project.SaasCRM.domain.TaskStatus;
 import com.project.SaasCRM.domain.TaskType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -19,10 +24,11 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Size(max = 100)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Size(max = 500)
     private String description;
 
     @Column(name = "task_type")
@@ -35,17 +41,17 @@ public class Task {
     @Column(name = "reminder_date")
     private LocalDateTime reminderDate;
 
-    @Column(name = "task_status")
+    @NotNull
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
-    @Column(name = "priority_level")
+    @NotNull
     @Enumerated(EnumType.STRING)
-    private PriorityLevel priorityLevel;
+    private TaskPriority priority;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_user_id")
-    private User assignedUser;
+    @JoinColumn(name = "assignee_id")
+    private User assignee;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
@@ -55,9 +61,11 @@ public class Task {
     @JoinColumn(name = "deal_id")
     private Deal deal;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
@@ -66,12 +74,18 @@ public class Task {
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+        if (status == null) {
+            status = TaskStatus.PENDING;
+        }
+        if (priority == null) {
+            priority = TaskPriority.MEDIUM;
+        }
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 }

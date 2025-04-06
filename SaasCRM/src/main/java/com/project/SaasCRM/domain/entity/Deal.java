@@ -1,9 +1,16 @@
 package com.project.SaasCRM.domain.entity;
 
 import com.project.SaasCRM.domain.DealStatus;
+import com.project.SaasCRM.domain.DealStage;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,32 +26,45 @@ public class Deal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
+    @NotBlank
+    @Size(max = 100)
+    private String name;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_user_id")
-    private User assignedUser;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal value;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pipeline_stage_id", nullable = false)
-    private PipelineStage pipelineStage;
-
-    @Column(name = "value_amount")
-    private Double valueAmount;
-
-    @Column(name = "value_currency")
-    private String valueCurrency;
+    @Enumerated(EnumType.STRING)
+    private DealStage stage;
 
     @Column(name = "expected_close_date")
     private LocalDateTime expectedCloseDate;
 
     @Column(name = "actual_close_date")
     private LocalDateTime actualCloseDate;
+
+    @Size(max = 500)
+    private String description;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "deal_assigned_users",
+        joinColumns = @JoinColumn(name = "deal_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> assignedUsers = new HashSet<>();
+
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Column(name = "deal_status")
     @Enumerated(EnumType.STRING)
@@ -56,23 +76,20 @@ public class Deal {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
     @OneToMany(mappedBy = "deal", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Task> tasks = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+        if (stage == null) {
+            stage = DealStage.NEW;
+        }
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 }

@@ -1,7 +1,7 @@
 package com.project.SaasCRM.service;
 
 import com.project.SaasCRM.domain.SendStatus;
-import com.project.SaasCRM.domain.entity.EmailCommunication;
+import com.project.SaasCRM.domain.dto.EmailCommunicationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,31 +11,31 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface EmailCommunicationService {
-    EmailCommunication saveEmailCommunication(EmailCommunication emailCommunication);
+    EmailCommunicationDTO saveEmailCommunication(EmailCommunicationDTO emailCommunication);
 
-    EmailCommunication updateEmailCommunication(EmailCommunication emailCommunication);
+    EmailCommunicationDTO updateEmailCommunication(EmailCommunicationDTO emailCommunication);
 
     void deleteEmailCommunication(Long emailId);
 
-    Optional<EmailCommunication> findById(Long emailId);
+    Optional<EmailCommunicationDTO> findById(Long emailId);
 
-    List<EmailCommunication> findAllEmailCommunications();
+    List<EmailCommunicationDTO> findAllEmailCommunications();
 
-    Page<EmailCommunication> findAllEmailCommunicationsPaginated(Pageable pageable);
+    Page<EmailCommunicationDTO> findAllEmailCommunicationsPaginated(Pageable pageable);
 
-    List<EmailCommunication> findEmailsByCustomer(Long customerId);
+    List<EmailCommunicationDTO> findEmailsByCustomer(Long customerId);
 
-    List<EmailCommunication> findEmailsBySentBy(Long userId);
+    List<EmailCommunicationDTO> findEmailsBySentBy(Long userId);
 
-    List<EmailCommunication> findEmailsByTemplate(Long templateId);
+    List<EmailCommunicationDTO> findEmailsByTemplate(Long templateId);
 
-    List<EmailCommunication> findEmailsByStatus(SendStatus status);
+    List<EmailCommunicationDTO> findEmailsByStatus(SendStatus status);
 
-    List<EmailCommunication> findOpenedEmails();
+    List<EmailCommunicationDTO> findOpenedEmails();
 
-    EmailCommunication sendEmail(Long emailId);
+    EmailCommunicationDTO sendEmail(Long emailId);
 
-    EmailCommunication scheduleEmail(Long emailId, LocalDateTime scheduledTime);
+    EmailCommunicationDTO scheduleEmail(Long emailId, LocalDateTime scheduledTime);
 
     void processScheduledEmails();
 
@@ -43,7 +43,7 @@ public interface EmailCommunicationService {
 
     void incrementEmailClickCount(Long emailId);
 
-    EmailCommunication createEmailFromTemplate(Long templateId, Long customerId, String subject);
+    EmailCommunicationDTO createEmailFromTemplate(Long templateId, Long customerId, String subject);
 
     Map<String, Long> getEmailCountsByDate(LocalDateTime startDate, LocalDateTime endDate);
 

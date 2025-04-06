@@ -1,5 +1,12 @@
 package com.project.SaasCRM.domain;
 
 public enum CustomerStatus {
-    LEAD, PROSPECT, CUSTOMER, INACTIVE, FORMER
+    NEW,
+    ACTIVE,
+    INACTIVE,
+    LEAD,
+    PROSPECT,
+    QUALIFIED,
+    CUSTOMER,
+    CHURNED
 }

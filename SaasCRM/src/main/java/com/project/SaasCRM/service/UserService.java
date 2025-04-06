@@ -1,6 +1,6 @@
 package com.project.SaasCRM.service;
 
-import com.project.SaasCRM.domain.entity.User;
+import com.project.SaasCRM.domain.dto.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,33 +9,33 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService extends UserDetailsService {
-    User saveUser(User user);
+    UserDTO saveUser(UserDTO user);
 
-    User updateUser(User user);
+    UserDTO updateUser(UserDTO user);
 
     void deleteUser(Long userId);
 
-    Optional<User> findById(Long userId);
+    Optional<UserDTO> findById(Long userId);
 
-    Optional<User> findByUsername(String username);
+    Optional<UserDTO> findByUsername(String username);
 
-    Optional<User> findByEmail(String email);
+    Optional<UserDTO> findByEmail(String email);
 
-    List<User> findAllUsers();
+    List<UserDTO> findAllUsers();
 
-    Page<User> findAllUsersPaginated(Pageable pageable);
+    Page<UserDTO> findAllUsersPaginated(Pageable pageable);
 
-    Page<User> searchUsers(String searchTerm, Pageable pageable);
+    Page<UserDTO> searchUsers(String searchTerm, Pageable pageable);
 
-    List<User> findUsersByRole(String roleName);
+    List<UserDTO> findUsersByRole(String roleName);
 
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
 
-    User addRoleToUser(Long userId, Long roleId);
+    UserDTO addRoleToUser(Long userId, Long roleId);
 
-    User removeRoleFromUser(Long userId, Long roleId);
+    UserDTO removeRoleFromUser(Long userId, Long roleId);
 
     void changePassword(Long userId, String currentPassword, String newPassword);
 
