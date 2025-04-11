@@ -15,7 +15,7 @@ public interface NotificationMapper {
     @Mapping(target = "entityId", source = "entityId")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "readAt", source = "readAt")
-    @Mapping(target = "isRead", source = "read")
+    @Mapping(target = "read", source = "read")
     @Mapping(target = "notificationType", source = "notificationType")
     @Mapping(target = "dueDate", source = "dueDate")
     NotificationDTO toDto(Notification notification);
@@ -27,7 +27,7 @@ public interface NotificationMapper {
     @Mapping(target = "entityId", source = "entityId")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "readAt", source = "readAt")
-    @Mapping(target = "read", source = "isRead")
+    @Mapping(target = "read", source = "read")
     @Mapping(target = "notificationType", source = "notificationType")
     @Mapping(target = "dueDate", source = "dueDate")
     Notification toEntity(NotificationDTO notificationDTO);
@@ -46,8 +46,6 @@ public interface NotificationMapper {
         if (dto.getEntityId() == null) {
             notification.setEntityId(0L);
         }
-        if (dto.getIsRead() == null) {
-            notification.setRead(false);
-        }
+        notification.setRead(dto.isRead());
     }
-} 
+}

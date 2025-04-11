@@ -7,9 +7,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface UserService extends UserDetailsService {
     UserDTO saveUser(UserDTO user);
+
+    UserDTO createUser(String username, String email, String password, String fullName, String phoneNumber, Set<String> roles);
 
     UserDTO updateUser(UserDTO user);
 
@@ -42,4 +45,20 @@ public interface UserService extends UserDetailsService {
     void resetPassword(String email);
 
     void updateLastLogin(Long userId);
+    
+    /**
+     * Update a user's active status
+     *
+     * @param userId User ID
+     * @param active Active status (true = active, false = disabled)
+     * @return Updated user DTO
+     */
+    UserDTO updateUserStatus(Long userId, boolean active);
+    
+    /**
+     * Get the currently authenticated user
+     *
+     * @return Current user DTO
+     */
+    UserDTO getCurrentUser();
 }

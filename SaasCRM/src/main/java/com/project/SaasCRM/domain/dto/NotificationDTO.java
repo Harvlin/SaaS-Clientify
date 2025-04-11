@@ -19,7 +19,7 @@ public class NotificationDTO {
     private Long entityId;
     private LocalDateTime createdAt;
     private LocalDateTime readAt;
-    private boolean isRead;
+    private boolean read;
     private String notificationType;
     private LocalDateTime dueDate;
 } 

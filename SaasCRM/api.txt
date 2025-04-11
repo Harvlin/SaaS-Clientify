@@ -1,0 +1,216 @@
+# CRM System API Endpoints
+
+## Authentication Controller
+
+```
+POST /api/auth/login                  - Authenticate user and get JWT token
+POST /api/auth/register               - Register a new user (admin only)
+POST /api/auth/refresh-token          - Refresh JWT token
+POST /api/auth/logout                 - Logout and invalidate token
+POST /api/auth/password/change        - Change password
+POST /api/auth/password/reset-request - Request password reset
+POST /api/auth/password/reset         - Reset password with token
+GET  /api/auth/user-info              - Get current user info
+```
+
+## User Controller
+
+```
+GET    /api/users                     - Get all users (with pagination)
+POST   /api/users                     - Create new user (admin only)
+GET    /api/users/{id}                - Get user by ID
+PUT    /api/users/{id}                - Update user
+DELETE /api/users/{id}                - Delete user (admin only)
+GET    /api/users/search              - Search users
+GET    /api/users/role/{roleName}     - Get users by role
+POST   /api/users/{id}/roles/{roleId} - Assign role to user
+DELETE /api/users/{id}/roles/{roleId} - Remove role from user
+GET    /api/users/{id}/tasks          - Get tasks assigned to user
+GET    /api/users/{id}/customers      - Get customers assigned to user
+GET    /api/users/{id}/deals          - Get deals assigned to user
+```
+
+## Role Controller
+
+```
+GET    /api/roles                     - Get all roles
+POST   /api/roles                     - Create new role (admin only)
+GET    /api/roles/{id}                - Get role by ID
+PUT    /api/roles/{id}                - Update role (admin only)
+DELETE /api/roles/{id}                - Delete role (admin only)
+```
+
+## Customer Controller
+
+```
+GET    /api/customers                      - Get all customers (with pagination)
+POST   /api/customers                      - Create new customer
+GET    /api/customers/{id}                 - Get customer by ID
+PUT    /api/customers/{id}                 - Update customer
+DELETE /api/customers/{id}                 - Delete customer
+GET    /api/customers/search               - Search customers
+GET    /api/customers/status/{status}      - Get customers by status
+GET    /api/customers/assigned/{userId}    - Get customers assigned to user
+PUT    /api/customers/{id}/assign/{userId} - Assign customer to user
+PUT    /api/customers/{id}/status          - Update customer status
+GET    /api/customers/{id}/interactions    - Get customer interactions
+GET    /api/customers/{id}/deals           - Get customer deals
+GET    /api/customers/{id}/tasks           - Get customer tasks
+GET    /api/customers/{id}/emails          - Get customer emails
+GET    /api/customers/recent               - Get recently added customers
+GET    /api/customers/stats                - Get customer statistics
+```
+
+## Interaction Controller
+
+```
+GET    /api/interactions                    - Get all interactions (with pagination)
+POST   /api/interactions                    - Create new interaction
+GET    /api/interactions/{id}               - Get interaction by ID
+PUT    /api/interactions/{id}               - Update interaction
+DELETE /api/interactions/{id}               - Delete interaction
+GET    /api/interactions/customer/{id}      - Get interactions by customer
+GET    /api/interactions/user/{id}          - Get interactions by user
+GET    /api/interactions/type/{type}        - Get interactions by type
+GET    /api/interactions/recent             - Get recent interactions
+GET    /api/interactions/stats/by-type      - Get interaction stats by type
+GET    /api/interactions/stats/by-date      - Get interaction stats by date range
+```
+
+## Deal Controller
+
+```
+GET    /api/deals                         - Get all deals (with pagination)
+POST   /api/deals                         - Create new deal
+GET    /api/deals/{id}                    - Get deal by ID
+PUT    /api/deals/{id}                    - Update deal
+DELETE /api/deals/{id}                    - Delete deal
+GET    /api/deals/search                  - Search deals
+GET    /api/deals/customer/{id}           - Get deals by customer
+GET    /api/deals/user/{id}               - Get deals by assigned user
+GET    /api/deals/stage/{id}              - Get deals by pipeline stage
+GET    /api/deals/status/{status}         - Get deals by status
+PUT    /api/deals/{id}/assign/{userId}    - Assign deal to user
+PUT    /api/deals/{id}/stage/{stageId}    - Update deal stage
+PUT    /api/deals/{id}/status             - Update deal status
+GET    /api/deals/{id}/tasks              - Get tasks related to deal
+POST   /api/deals/{id}/tasks              - Create task for deal
+PUT    /api/deals/{id}/won                - Close deal as won
+PUT    /api/deals/{id}/lost               - Close deal as lost
+GET    /api/deals/recent                  - Get recent deals
+GET    /api/deals/stats                   - Get deal statistics
+GET    /api/deals/value                   - Get deal value by status
+```
+
+## Pipeline Stage Controller
+
+```
+GET    /api/pipeline-stages               - Get all pipeline stages
+POST   /api/pipeline-stages               - Create new pipeline stage
+GET    /api/pipeline-stages/{id}          - Get pipeline stage by ID
+PUT    /api/pipeline-stages/{id}          - Update pipeline stage
+DELETE /api/pipeline-stages/{id}          - Delete pipeline stage
+GET    /api/pipeline-stages/ordered       - Get ordered pipeline stages
+PUT    /api/pipeline-stages/reorder       - Reorder pipeline stages
+GET    /api/pipeline-stages/stats         - Get pipeline stage statistics
+```
+
+## Task Controller
+
+```
+GET    /api/tasks                         - Get all tasks (with pagination)
+POST   /api/tasks                         - Create new task
+GET    /api/tasks/{id}                    - Get task by ID
+PUT    /api/tasks/{id}                    - Update task
+DELETE /api/tasks/{id}                    - Delete task
+GET    /api/tasks/user/{id}               - Get tasks by assigned user
+GET    /api/tasks/user/{id}/pending       - Get pending tasks by user
+GET    /api/tasks/customer/{id}           - Get tasks by customer
+GET    /api/tasks/deal/{id}               - Get tasks by deal
+GET    /api/tasks/status/{status}         - Get tasks by status
+GET    /api/tasks/type/{type}             - Get tasks by type
+PUT    /api/tasks/{id}/assign/{userId}    - Assign task to user
+PUT    /api/tasks/{id}/status             - Update task status
+PUT    /api/tasks/{id}/complete           - Mark task as completed
+GET    /api/tasks/due-today               - Get tasks due today
+GET    /api/tasks/due-this-week           - Get tasks due this week
+GET    /api/tasks/overdue                 - Get overdue tasks
+GET    /api/tasks/upcoming                - Get upcoming tasks
+GET    /api/tasks/stats                   - Get task statistics
+```
+
+## Email Template Controller
+
+```
+GET    /api/email-templates                - Get all email templates (with pagination)
+POST   /api/email-templates                - Create new email template
+GET    /api/email-templates/{id}           - Get email template by ID
+PUT    /api/email-templates/{id}           - Update email template
+DELETE /api/email-templates/{id}           - Delete email template
+GET    /api/email-templates/type/{type}    - Get email templates by type
+GET    /api/email-templates/user/{id}      - Get email templates by creator
+GET    /api/email-templates/{id}/process/{customerId} - Process template for customer
+```
+
+## Email Communication Controller
+
+```
+GET    /api/emails                         - Get all emails (with pagination)
+POST   /api/emails                         - Create new email
+GET    /api/emails/{id}                    - Get email by ID
+PUT    /api/emails/{id}                    - Update email
+DELETE /api/emails/{id}                    - Delete email
+GET    /api/emails/customer/{id}           - Get emails by customer
+GET    /api/emails/user/{id}               - Get emails by sender
+GET    /api/emails/template/{id}           - Get emails by template
+GET    /api/emails/status/{status}         - Get emails by status
+GET    /api/emails/opened                  - Get opened emails
+POST   /api/emails/{id}/send               - Send email
+POST   /api/emails/{id}/schedule           - Schedule email
+PUT    /api/emails/{id}/opened             - Mark email as opened
+PUT    /api/emails/{id}/clicked            - Increment email click count
+POST   /api/emails/from-template           - Create email from template
+GET    /api/emails/stats                   - Get email statistics
+GET    /api/emails/open-rate               - Get email open rate
+GET    /api/emails/click-rate              - Get email click rate
+```
+
+## Dashboard Controller
+
+```
+GET    /api/dashboard/summary              - Get dashboard summary
+GET    /api/dashboard/sales-forecast       - Get sales forecast
+GET    /api/dashboard/customer-growth      - Get customer growth data
+GET    /api/dashboard/deal-performance     - Get deal performance data
+GET    /api/dashboard/customer-overview    - Get customer overview
+GET    /api/dashboard/task-overview        - Get task overview
+GET    /api/dashboard/deal-value-by-stage  - Get deal value by stage
+GET    /api/dashboard/deals-won-lost       - Get deals won/lost ratio
+GET    /api/dashboard/top-performers       - Get top performing users
+GET    /api/dashboard/user-activity        - Get user activity summary
+```
+
+## Report Controller
+
+```
+GET    /api/reports/sales                  - Generate sales report
+GET    /api/reports/customers              - Generate customer report
+GET    /api/reports/pipeline               - Generate deals pipeline report
+GET    /api/reports/activity               - Generate activity report
+GET    /api/reports/user-performance       - Generate user performance report
+GET    /api/reports/email-campaign         - Generate email campaign report
+```
+
+## Notification Controller
+
+```
+GET    /api/notifications/user/{id}        - Get notifications for user
+PUT    /api/notifications/{id}/read        - Mark notification as read
+```
+
+## Audit Log Controller
+
+```
+GET    /api/audit-logs/user/{id}           - Get activity logs by user
+GET    /api/audit-logs/entity/{type}/{id}  - Get activity logs by entity
+```

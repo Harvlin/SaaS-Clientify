@@ -4,7 +4,11 @@ import com.project.SaasCRM.domain.entity.EmailCommunication;
 import com.project.SaasCRM.domain.dto.EmailDTO;
 import com.project.SaasCRM.domain.SendStatus;
 import org.mapstruct.*;
-import java.util.ArrayList;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import java.util.Map;
 import java.util.HashMap;
 import java.time.LocalDateTime;
 
@@ -21,7 +25,7 @@ public interface EmailMapper {
     @Mapping(target = "status", source = "sendStatus")
     @Mapping(target = "sentAt", source = "sentAt")
     @Mapping(target = "scheduledAt", source = "scheduledFor")
-    @Mapping(target = "openCount", expression = "java(email.getIsOpened() != null && email.getIsOpened() ? 1 : 0)")
+    @Mapping(target = "openCount", expression = "java(email.isOpened() != null && email.isOpened() ? 1 : 0)")
     @Mapping(target = "clickCount", source = "clickCount")
     @Mapping(target = "errorMessage", ignore = true)
     @Mapping(target = "userId", source = "sentBy.id")
@@ -57,4 +61,28 @@ public interface EmailMapper {
             email.setSendStatus(SendStatus.PENDING);
         }
     }
-} 
+    
+    default Map<String, Object> stringToMap(String value) {
+        if (value == null || value.isEmpty()) {
+            return new HashMap<>();
+        }
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(value, new TypeReference<Map<String, Object>>() {});
+        } catch (JsonProcessingException e) {
+            return new HashMap<>();
+        }
+    }
+    
+    default String mapToString(Map<String, Object> map) {
+        if (map == null || map.isEmpty()) {
+            return "{}";
+        }
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            return "{}";
+        }
+    }
+}

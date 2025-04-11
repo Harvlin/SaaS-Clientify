@@ -45,5 +45,6 @@ public class Notification {
     private String notificationType;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean read = false;
 } 

@@ -42,4 +42,12 @@ public interface NotificationService {
     void deleteNotification(Long notificationId);
     
     void deleteAllNotifications(Long userId);
+    
+    /**
+     * Get a notification by ID
+     *
+     * @param notificationId Notification ID
+     * @return Notification DTO
+     */
+    NotificationDTO getNotificationById(Long notificationId);
 }

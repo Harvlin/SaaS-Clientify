@@ -21,8 +21,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +43,46 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User savedUser = userRepository.save(user);
         auditLogService.logUserActivity(savedUser.getId(), "USER_CREATED", "USER", savedUser.getId());
+        return userMapper.toDto(savedUser);
+    }
+
+    @Override
+    @Transactional
+    public UserDTO createUser(String username, String email, String password, String fullName, String phoneNumber, Set<String> roleNames) {
+        if (userRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+        
+        User user = User.builder()
+                .username(username)
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .fullName(fullName)
+                .phoneNumber(phoneNumber)
+                .active(true)
+                .roles(new HashSet<>())
+                .build();
+                
+        // Assign default role if no roles specified
+        if (roleNames == null || roleNames.isEmpty()) {
+            Role userRole = roleRepository.findByName("USER")
+                    .orElseThrow(() -> new IllegalStateException("Default role not found"));
+            user.getRoles().add(userRole);
+        } else {
+            // Assign specified roles
+            Set<Role> roles = roleNames.stream()
+                    .map(roleName -> roleRepository.findByName(roleName)
+                            .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleName)))
+                    .collect(Collectors.toSet());
+            user.getRoles().addAll(roles);
+        }
+        
+        User savedUser = userRepository.save(user);
+        auditLogService.logUserActivity(savedUser.getId(), "USER_REGISTERED", "USER", savedUser.getId());
         return userMapper.toDto(savedUser);
     }
 
@@ -188,6 +231,35 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         user.setLastLogin(LocalDateTime.now());
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public UserDTO updateUserStatus(Long userId, boolean active) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        
+        user.setActive(active);
+        User updatedUser = userRepository.save(user);
+        
+        String actionType = active ? "USER_ENABLED" : "USER_DISABLED";
+        auditLogService.logUserActivity(userId, actionType, "USER", userId);
+        
+        return userMapper.toDto(updatedUser);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public UserDTO getCurrentUser() {
+        // Get the currently authenticated user from security context
+        org.springframework.security.core.Authentication authentication = 
+            org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Current user not found"));
+        
+        return userMapper.toDto(user);
     }
 
     @Override

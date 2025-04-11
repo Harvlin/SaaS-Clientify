@@ -354,4 +354,13 @@ public class NotificationServiceImpl implements NotificationService {
     public void deleteAllNotifications(Long userId) {
         notificationRepository.deleteByUserId(userId);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public NotificationDTO getNotificationById(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+            .orElseThrow(() -> new ResourceNotFoundException("Notification not found with id: " + notificationId));
+            
+        return notificationMapper.toDto(notification);
+    }
 } 

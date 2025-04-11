@@ -70,5 +70,27 @@ public class SecurityService {
     public boolean canAccessDeal(Long dealId) {
         return isAdmin() || isAssignedToDeal(dealId);
     }
+    
+    /**
+     * Gets the ID of the currently authenticated user.
+     * 
+     * @return The ID of the currently authenticated user, or null if no user is authenticated
+     */
+    public Long getCurrentUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getPrincipal() == null) {
+            return null;
+        }
+        
+        Object principal = auth.getPrincipal();
+        
+        if (principal instanceof User) {
+            return ((User) principal).getId();
+        } else if (principal instanceof UserPrincipal) {
+            return ((UserPrincipal) principal).getId();
+        }
+        
+        return null;
+    }
 }
 
